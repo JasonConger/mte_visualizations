@@ -1,0 +1,88 @@
+<dashboard>
+  <label>Bootstrap Modal Dialog Example</label>
+  <description>This dashboard displays the count by sourcetype.  For a description, click on the information icon.</description>
+  <row>
+    <panel>
+      <html>
+        <h3 class="dashboard-element-title">Sourcetypes
+          <a href="#" data-toggle="modal" data-target="#desc1">
+            <img src="/static/app/mte_visualizations/info.png"/>
+          </a>
+        </h3>
+      </html>
+      <chart id="chart1">
+        <search>
+          <query>index=_internal | chart count by sourcetype</query>
+          <earliest>-60m@m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+      </chart>
+      <html>
+        <!-- Modal -->
+        <div class="modal fade" id="desc1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	        <div class="modal-dialog">
+	          <div class="modal-content">
+	            <div class="modal-header" style="padding-top: 10px; padding-bottom: 10px">
+	              <h4 class="modal-title" id="myModalLabel">
+                  <img src="/static/app/mte_visualizations/info.png" style="padding-right: 10px"/>Here are some details</h4>
+	            </div>
+	            <div class="modal-body">
+	              <p>
+		              Here is an excellent description about the thing you see on the graph: <br/>
+                  <br/>
+              		Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              		Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+              		in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+              		sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              		eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
+              		ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+              		Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+	              </p>
+	            </div>
+	            <div class="modal-footer">
+	               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	            </div>
+	        </div>
+	      </div>
+      </div>
+    </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <html>
+        Things to note:
+        <ul>
+          <li><a href="http://getbootstrap.com/javascript/#modals" target="_blank">More about Bootstrap Modal</a></li>
+          <li>
+            To include the information icon next to the panel title, we have to simulate the HTML tag used by Splunk dashboards since we cannot include HTML in the <code>&lt;title&gt;</code> tag of Simple XML. Note in the example below, using the <code>dashboard-element-title</code> class along with the <code>&lt;h3&gt;</code> tag to reuse Splunk's dashboard style.
+          </li>
+        </ul>
+        <pre>
+&lt;row&gt;
+  &lt;panel&gt;
+    &lt;html&gt;
+      &lt;h3 class="dashboard-element-title"&gt;Sourcetypes
+        &lt;a href="#" data-toggle="modal" data-target="#desc1"&gt;
+          &lt;img src="/static/app/mte_visualizations/info.png"/&gt;
+        &lt;/a&gt;
+      &lt;/h3&gt;
+    &lt;/html&gt;
+        </pre>
+      </html>
+    </panel>
+  </row>
+</dashboard>

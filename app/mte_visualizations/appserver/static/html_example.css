@@ -1,0 +1,127 @@
+/* prototype styles, feel free to remove */
+body {
+    margin: 0;
+}
+/* end proto styles */
+
+.app-browser {
+    background: #f3f3f3;
+    font-family: 'Roboto';
+    font-weight: 300;
+    padding: 15px;
+    overflow: auto;
+    
+}
+
+.app-browser h1 {
+    font-weight: 300;
+    font-size: 24px;
+    margin-bottom: 30px;
+    color: #4A4A4A;
+}
+
+.edit-dashboard-menu {
+    display: none;
+}
+
+/* Buttons */
+.tile-btn {
+    font-family: 'Roboto';
+    font-weight: 300;
+    border: 1px solid rgba(0,0,0,0.10);
+    border-radius: 5px;
+    font-size: 13px;
+    height: 30px;
+    min-width: 135px;
+    cursor: pointer;
+}
+.tile-setup-btn {
+    background-image: linear-gradient(-180deg, rgba(255,255,255,0.10) 0%, rgba(0,0,0,0.05) 100%);
+    color: #FFFFFF;
+    background-color: #73B82D;
+}
+.tile-setup-btn:hover {
+    background: #78c22f;
+}
+.tile-launch-btn {
+    background-image: linear-gradient(-180deg, rgba(255,255,255,0.10) 0%, rgba(0,0,0,0.05) 100%);
+    background-color: #3295CA;
+    color: #FFF;
+}
+.tile-launch-btn:hover {
+    background: #369ed6;
+}
+.tile-edit-btn {
+    background-image: linear-gradient(-180deg, #F3F3F3 0%, #E0E0E0 96%);
+    color: #4A4A4A;
+}
+.tile-edit-btn:hover {
+    background-image: linear-gradient(-180deg, #F3F3F3 0%, #E6E6E6 96%);
+}
+
+/* tiles */
+.tile {
+    background: #FFFFFF;
+    box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.20);
+    width: 300px;
+    float: left;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    height: 260px;
+    width:380px;
+    position: relative;
+}
+.tile-content {
+    padding: 15px;
+}
+.tile-icon {
+    float: left;
+}
+.tile-app-name {
+    font-weight: 400;
+    font-size: 18px;
+    margin: 0 0 22px 65px;
+    color: #4A4A4A;
+}
+.tile-app-description {
+    font-size: 13px;
+    font-weight: 300;
+    margin-left: 65px;
+    color: #666666;
+    line-height: 18px;
+}
+.tile-footer {
+    background: rgba(243,243,243,0.50);
+    padding: 15px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.tile-footer-right {
+    float: right;
+}
+
+/* more apps tile */
+.tile-new {
+    background: rgba(79,161,204,0.05);
+    border: 1px solid rgba(45,176,225,0.10);
+    box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.20);
+    font-size: 18px;
+    color: #2DB0E1;
+    display: table;
+    cursor: pointer;
+}
+.tile-new-messaging {
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+}
+.tile-new-messaging a {
+    display: block;
+    cursor: pointer;
+}
+.tile-new-icon {
+    margin-bottom: 3px;
+}

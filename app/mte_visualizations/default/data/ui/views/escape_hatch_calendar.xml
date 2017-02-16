@@ -1,0 +1,64 @@
+<dashboard stylesheet="calendar.css" script="autodiscover.js">
+    <label>Calendar using Escape Hatch</label>
+	<row>
+		<panel>
+			<html>
+				The calendar visualization used in this demonstration can be found at <a href="https://fullcalendar.io/" target="_blank">fullcalendar.io</a>.
+			</html>
+		</panel>
+	</row>
+    <row>
+		<panel>
+			<html>
+				<div id="calSearch"
+					 class="splunk-manager"
+					 data-require="splunkjs/mvc/searchmanager"
+					 data-options='{
+						"search": "| tstats dc(sourcetype) as sourcetypes where index=_internal by _time span=1d",
+						"preview": true
+					 }'>
+				</div>
+				
+				 <div id="eventCalendar"
+					 class="splunk-view"
+					 data-require="app/mte_visualizations/components/eventcalendar/eventcalendar"
+					 data-options='{
+						"managerid": "calSearch",
+						"valueField": "sourcetypes",
+						"dateField": "_time",
+						"linkUrl": "/app/mte_visualizations/day",
+						"destFormField": "date"
+					 }'>
+				</div>
+			</html>
+		</panel>
+    </row>
+	<row>
+		<panel>
+			<html>
+				<pre>
+&lt;div id="calSearch"
+	 class="splunk-manager"
+	 data-require="splunkjs/mvc/searchmanager"
+	 data-options='{
+		"search": "| tstats dc(sourcetype) as sourcetypes where index=_internal by _time span=1d ",
+		"preview": true
+	 }'&gt;
+&lt;/div&gt;
+
+ &lt;div id="eventCalendar"
+	 class="splunk-view"
+	 data-require="app/mte_visualizations/components/eventcalendar/eventcalendar"
+	 data-options='{
+		"managerid": "calSearch",
+		"valueField": "components",
+		"dateField": "date",
+		"linkUrl": "/app/mte_visualizations/day",
+		"destFormField": "date"
+	 }'&gt;
+&lt;/div&gt;
+				</pre>
+			</html>
+		</panel>
+	</row>
+</dashboard>

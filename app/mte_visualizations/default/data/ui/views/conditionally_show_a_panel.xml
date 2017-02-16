@@ -1,0 +1,94 @@
+<form>
+  <label>Conditionally Show a Panel based on Search Results</label>
+  <description>This dashboard demonstrates how to conditionally show dashboard content based on search results.  Enter an IP address below that geostats can decipher (like 104.27.172.90 for a San Francisco IP address) to display the map.  If the geostats cannot determine a lat and lon for an IP address (like 127.0.0.1), the map will be hidden.</description>
+  <search id="map_search">
+    <query>| makeresults | eval ipaddr=$ipaddr$ | iplocation ipaddr</query>
+    <sampleRatio>1</sampleRatio>
+    <progress>
+      <condition match="$result.lat$!=&quot;&quot;">
+        <set token="show_map">true</set>
+      </condition>
+      <condition>
+        <unset token="show_map"></unset>
+      </condition>
+    </progress>
+  </search>
+  <fieldset submitButton="true" autoRun="false">
+    <input type="text" token="ipaddr">
+      <label>IP Address:</label>
+      <prefix>"</prefix>
+      <suffix>"</suffix>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <table>
+        <title>IP Address Details</title>
+        <search base="map_search"></search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel>
+      <map depends="$show_map$">
+        <title>The map shows up if geostats can determine lat and lon</title>
+        <search base="map_search">
+          <query>geostats count by ipaddr</query>
+        </search>
+        <option name="drilldown">all</option>
+        <option name="mapping.choroplethLayer.colorBins">5</option>
+        <option name="mapping.choroplethLayer.colorMode">auto</option>
+        <option name="mapping.choroplethLayer.maximumColor">0xDB5800</option>
+        <option name="mapping.choroplethLayer.minimumColor">0x2F25BA</option>
+        <option name="mapping.choroplethLayer.neutralPoint">0</option>
+        <option name="mapping.choroplethLayer.shapeOpacity">0.75</option>
+        <option name="mapping.choroplethLayer.showBorder">1</option>
+        <option name="mapping.data.maxClusters">100</option>
+        <option name="mapping.map.center">(0,0)</option>
+        <option name="mapping.map.panning">1</option>
+        <option name="mapping.map.scrollZoom">0</option>
+        <option name="mapping.map.zoom">2</option>
+        <option name="mapping.markerLayer.markerMaxSize">50</option>
+        <option name="mapping.markerLayer.markerMinSize">10</option>
+        <option name="mapping.markerLayer.markerOpacity">0.8</option>
+        <option name="mapping.showTiles">1</option>
+        <option name="mapping.tileLayer.maxZoom">7</option>
+        <option name="mapping.tileLayer.minZoom">0</option>
+        <option name="mapping.tileLayer.tileOpacity">1</option>
+        <option name="mapping.type">marker</option>
+      </map>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <html>
+        Here is how the magic happens.  First, you need a search with a conditional event handler (notice the condition on result.lat):
+        <pre>
+&lt;search id="map_search"&gt;
+  &lt;query&gt;| makeresults | eval ipaddr=&#36;ipaddr&#36; | iplocation ipaddr&lt;/query&gt;
+    &lt;progress&gt;
+      &lt;condition match='<mark>$result.lat$!=&quot;&quot;</mark>'&gt;
+        &lt;set token="<mark>show_map</mark>"&gt;true&lt;/set&gt;
+      &lt;/condition&gt;
+      &lt;condition&gt;
+        &lt;unset token="<mark>show_map</mark>"&gt;&lt;/unset&gt;
+      &lt;/condition&gt;
+    &lt;/progress&gt;
+&lt;/search&gt;</pre>
+        
+        Next, set the map element to depend on a token set by the condition:
+        <pre>
+&lt;panel&gt;
+  &lt;map depends="<mark>&#36;show_map&#36;</mark>"&gt;</pre>
+        <p></p>
+        <pre>
+Fun fact - tokens work in HTML tags too!  Here is the value for &#36;show_map&#36;: $show_map$</pre>
+      </html>
+    </panel>
+  </row>
+</form>

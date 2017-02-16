@@ -1,0 +1,12 @@
+<dashboard stylesheet="calendar.css" script="autodiscover.js">
+    <label>Day Details</label>
+    <row>
+        <html>
+            
+            <p>
+                Details about this day would go here.
+            </p>
+             
+        </html>
+    </row>
+</dashboard>

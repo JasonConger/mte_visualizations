@@ -1,0 +1,38 @@
+<dashboard script="table2list.js">
+  <label>Table View to List View</label>
+  <description>This dashboard demonstrates how to turn a table view into a list view using the DataView SplunkJS component.  Both of the panels below use the same search.</description>
+  <search id="base">
+    <query>index=_internal | head 10 | table  host source sourcetype</query>
+    <sampleRatio>1</sampleRatio>
+  </search>
+  <row>
+    <panel>
+      <title>Table View using a base search</title>
+      <table>
+        <search base="base"></search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>List View using the same base search</title>
+      <html>
+		<div id="list-view"/>
+	  </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <html>
+        This dashboard uses the <a href="http://docs.splunk.com/DocumentationStatic/WebFramework/1.4/compref_datatemplate.html" target="_blank">DataTemplateView</a> to render search results.
+      </html>
+    </panel>
+  </row>
+</dashboard>

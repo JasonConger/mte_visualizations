@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Splunk App Configurator</title>
+    <link rel="shortcut icon" href="{{SPLUNKWEB_URL_PREFIX}}/static/img/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="{{SPLUNKWEB_URL_PREFIX}}/static/build/css/bootstrap-enterprise.css" />
+    <link rel="stylesheet" type="text/css" href="{{SPLUNKWEB_URL_PREFIX}}/static/css/build/pages/dashboard-simple-bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/app/mte_visualizations/html_example.css" />
+</head>
+<body class="simplexml preload locale-en">
+<!--
+<a class="navSkip" href="#navSkip" tabindex="1">Screen reader users, click here to skip the navigation bar</a>
+
+<div class="header splunk-header">
+	
+        <div id="placeholder-splunk-bar">
+            <a href="{{SPLUNKWEB_URL_PREFIX}}/app/launcher/home" class="brand" title="splunk &gt; listen to your data">splunk<strong>&gt;</strong></a>
+        </div>
+	
+         <div id="placeholder-app-bar"></div> 
+</div>
+
+<a id="navSkip"></a>
+-->
+<div class="dashboard-body container-fluid main-section-body" data-role="main">
+    
+    <div class="dashboard-header clearfix">
+        <h2>Splunk App Configurator</h2>
+	<p class="description"></p>
+    </div>
+
+    <div id="row1" class="dashboard-row dashboard-row1">
+        <div class="dashboard-cell" id="cell-detail" style="width: 100%;">
+            <div class="dashboard-panel" style="min-height: 100px">
+                <div class="panel-element-row">
+		    
+                    <div class="dashboard-element dataview" style="width: 100%">
+                        <div class="panel-body">
+			    <div id="app-details"></div>
+			</div>
+                    </div>
+		    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<!--
+<div class="footer"></div>
+-->
+<!-- 
+END LAYOUT
+-->
+
+<script src="{{SPLUNKWEB_URL_PREFIX}}/config?autoload=1"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/static/js/i18n.js"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/i18ncatalog?autoload=1"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/static/build/simplexml/index.js"></script>
+
+<script type="text/x-underscore-tmpl" id="app-detail-template">
+<div class="app-browser">
+    <div class="tile-container">
+    
+    <%
+    for(var i=0, l=results.length; i<l; i++) {
+	var line=results[i];
+        %>
+        
+        <div class="tile">
+            <div class="tile-content">
+                <div class="tile-icon">
+                    <img src="/static/app/<%= line["app_path"] %>/appIcon.png" height="50" width="50" />
+                </div>
+                <h3 class="tile-app-name"><%= line["Name"] %></h3>
+                <div class="tile-app-description">
+                    <%= line["Description"] %>
+                </div>
+            </div>
+            <div class="tile-footer">
+                <% if(line["is_configured"] == "1") { %>
+                    <div class="tile-footer-right">
+                        <button onClick="window.location='/app/<%= line["app_path"] %>/'" class="tile-btn tile-launch-btn">Launch</button>
+                    </div>
+                    <button onClick="window.location='/manager/<%= line["app_path"] %>/apps/local/<%= line["app_path"] %>/setup?action=edit&redirect_override=/app/mte_visualizations/app_config'" class="tile-btn tile-edit-btn">Edit</button>
+                <% } else { %>
+                    <div class="tile-footer">
+                        <div class="tile-footer-right">
+                            <button onClick="window.location='/manager/<%= line["app_path"] %>/apps/local/<%= line["app_path"] %>/setup?action=edit&redirect_override=/app/mte_visualizations/app_config'" class="tile-btn tile-setup-btn">Configure</button>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        
+    <%
+    }
+    %>
+
+    </div>
+</div>
+</script>
+
+
+<script type="text/javascript">
+require.config({
+    baseUrl: "{{SPLUNKWEB_URL_PREFIX}}/static/js",
+    waitSeconds: 0 // Disable require.js load timeout
+});
+
+//
+// LIBRARY REQUIREMENTS
+//
+// In the require function, we include the necessary libraries and modules for
+// the HTML dashboard. Then, we pass variable names for these libraries and
+// modules as function parameters, in order.
+// 
+// When you add libraries or modules, remember to retain this mapping order
+// between the library or module and its function parameter. You can do this by
+// adding to the end of these lists, as shown in the commented examples below.
+
+require([
+    "splunkjs/mvc",
+    "splunkjs/mvc/utils",
+    "underscore",
+    "jquery",
+    "splunkjs/mvc/simplexml",
+    "splunkjs/mvc/headerview",
+    "splunkjs/mvc/footerview",
+    "splunkjs/mvc/simplexml/dashboardview",
+    "splunkjs/mvc/simplexml/dashboard/panelref",
+    "splunkjs/mvc/simpleform/formutils",
+    "splunkjs/mvc/simplexml/eventhandler",
+    "splunkjs/mvc/searchmanager",
+    "splunkjs/mvc/simplexml/urltokenmodel",
+    "splunkjs/mvc/dataview"
+    ],
+    function(
+        mvc,
+        utils,
+        _,
+        $,
+        DashboardController,
+        HeaderView,
+        FooterView,
+        Dashboard,
+        PanelRef,
+        FormUtils,
+        EventHandler,
+        SearchManager,
+        UrlTokenModel,
+        DataView
+        ) {
+
+        var pageLoading = true;
+        
+        // Create token namespaces
+        var urlTokenModel = new UrlTokenModel();
+        mvc.Components.registerInstance('url', urlTokenModel);
+        var defaultTokenModel = mvc.Components.getInstance('default', {create: true});
+        var submittedTokenModel = mvc.Components.getInstance('submitted', {create: true});
+
+        urlTokenModel.on('url:navigate', function() {
+            defaultTokenModel.set(urlTokenModel.toJSON());
+            if (!_.isEmpty(urlTokenModel.toJSON()) && !_.all(urlTokenModel.toJSON(), _.isUndefined)) {
+                submitTokens();
+            } else {
+                submittedTokenModel.clear();
+            }
+        });
+
+        // Initialize tokens
+        defaultTokenModel.set(urlTokenModel.toJSON());
+
+        function submitTokens() {
+            // Copy the contents of the defaultTokenModel to the submittedTokenModel and urlTokenModel
+            FormUtils.submitForm({ replaceState: pageLoading });
+        }
+
+        function setToken(name, value) {
+            defaultTokenModel.set(name, value);
+            submittedTokenModel.set(name, value);
+        }
+
+        function unsetToken(name) {
+            defaultTokenModel.unset(name);
+            submittedTokenModel.unset(name);
+        }
+
+        //
+        // SEARCH MANAGERS
+        //
+
+        var search1 = new SearchManager({
+            "id": "search1",
+            "search": "| rest /servicesNS/nobody/splunk-app-sfdc/configs/conf-app | \
+append [| rest /servicesNS/nobody/mte_visualizations/configs/conf-app] | \
+append [| rest /servicesNS/nobody/opendns_investigate/configs/conf-app] | \
+stats values(label) AS Name values(description) AS Description values(is_configured) AS is_configured values(eai:appName) AS app_path by eai:appName",
+            "earliest_time": "-1m",
+            "status_buckets": 0,
+            "cancelOnUnload": true,
+            "latest_time": "now",
+            "app": utils.getCurrentApp(),
+            "auto_cancel": 90,
+            "preview": true,
+            "runWhenTimeIsUndefined": false
+        }, {tokens: true, tokenNamespace: "submitted"});
+        
+        //***********************************
+        // DataView - pivots the table
+        //***********************************
+		new DataView({
+            id: "app-details1",
+            managerid: "search1",
+            template: $('#app-detail-template').html(),
+            el: $('#app-details')
+        }, {tokens: true}).render();
+        
+
+        // Initialize time tokens to default
+        if (!defaultTokenModel.has('earliest') && !defaultTokenModel.has('latest')) {
+            defaultTokenModel.set({ earliest: '0', latest: '' });
+        }
+
+        //
+        // SPLUNK HEADER AND FOOTER
+        //
+
+        new HeaderView({
+            id: 'header',
+            section: 'dashboards',
+            el: $('.header'),
+            acceleratedAppNav: true,
+            useSessionStorageCache: true,
+            splunkbar: true,
+            appbar: true,
+            litebar: false,
+        }, {tokens: true}).render();
+
+        new FooterView({
+            id: 'footer',
+            el: $('.footer')
+        }, {tokens: true}).render();
+
+
+        //
+        // DASHBOARD EDITOR
+        //
+
+        new Dashboard({
+            id: 'dashboard',
+            el: $('.dashboard-body'),
+            showTitle: true,
+            editable: true
+        }, {tokens: true}).render();
+
+        submitTokens();
+
+        //
+        // DASHBOARD READY
+        //
+
+        DashboardController.ready();
+        pageLoading = false;
+
+    }
+);
+</script>
+</body>
+</html>

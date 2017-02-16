@@ -1,0 +1,23 @@
+<nav search_view="search" color="#1497e7">
+	<collection label="Simple XML Examples">
+		<view name="conditionally_show_a_panel" />
+		<view name="start_a_search_after_another_search_finishes" />
+		<view name="bootstrap_modal_dialog" />
+	</collection>
+	<collection label="Simple XML with JavaScript">
+		<view name="bootstrap_tooltip" />
+		<view name="html5_input_types" />
+		<view name="table_view_to_list_view" />
+	</collection>
+	<collection label="Third Party Integration">
+		<view name="escape_hatch_calendar" />
+		<view name="calendar_gallery" />
+	</collection>
+	<collection label="HTML Examples">
+		<a href="app_config">Splunk App Configurator</a>
+	</collection>
+	<collection label="Fun Stuff">
+		<view name="carousel1" />
+	</collection>
+  <view name="search" />
+</nav>
